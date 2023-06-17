@@ -1,0 +1,44 @@
+# service:
+#   docker run -dp 3000:3000 \
+#     -w /app -v "$(pwd):/app" \
+#     --network todo-app \
+#     -e mysql_host=mysql \
+#     -e mysql_user=root \
+#     -e mysql_password=secret \
+#     -e mysql_db=todos \
+#     node:18-alpine \
+#     sh -c "yarn install && yarn run dev"
+
+service:
+  app:
+    image: node:18-alpine
+    command: sh -c "yarn install && yarn run dev"
+    peot:
+      - 3000:3000
+    working_dir: /app
+    volume: ./:/app
+    enviroment:
+      mysql_host: mysql
+      mysql_user: root
+      mysql_password: secret
+      mysql_db: todos
+
+
+# docker run -d \
+#   不需網路（--network todo-app --network-alias mysql \）
+  # -v todo-mysql-data:/var/lib/mysql \
+  # -e mysql_root_password=secret
+  # -e mysql_database=todo \
+  # mysql:8.0
+
+  mysql:
+    image: mysql:8.0
+    volumes:
+      - todo-mysql-data:/var/lib/mysql
+    enviroment:
+      mysql_root_password: secret
+      mysql_database: todos
+
+volumes:
+  todo-mysql_data:
+
